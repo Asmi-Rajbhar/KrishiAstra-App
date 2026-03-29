@@ -1,0 +1,32 @@
+class AppImages {
+  AppImages._();
+
+  // Local Assets
+  static const String quantbitLogo = 'assets/images/quantbit_technologies_logo.jpeg';
+
+  // Network Images - Nutrient Deficiency
+  static const String nitrogenDeficiency =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBGXfa2LCFWeJ3D4Lz86gXaUIz-KCxkhsFFsgAr9EmQWUbmdCs8n5BNefxaLTsBeRYhXNCLZzm-ywKcExgroeW2-8skswreGU3DMFc_aDEI18dIwRhtYyjRVp4ztHQ-S3-oDeCDqfv4U5rJfsdYtpD8Mh0QJEqtVRx_XEsIfPf5vPpOZaY7x48JnmjMcNYkk12mVbuRTOPOUADo0X9aA9PuLkqctDR5FPb6WiqhUVRL0CQIN9nXH3cghRD8o8DsskAJ-i_VbYUOFo4U';
+  static const String phosphorusDeficiency =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBYvCZkbSI3KOVAznts6m54VEjoZJusI_LmkboOAQU92OqyGTw617xboVMMSrqopwfa_hNLUA4JPyBl9WcrFu7jGpEpNjHyHZMgFaj76C2WqY9z-qGxKTLX7wlNwtYKM0KU7sA9CyMnrKzS9WSdTFWzLXHqfjEjTZFDBmj-dXwUOucFxO0LJcgCoPXyzN-WmEFuQ5e2qda-PYFAnWVOEDPtJM9EGvP4RcfEcAk5SAsU-uIiYnfbIs2j8dR7GrPRPyG10Na41VeTafwV';
+  static const String potassiumDeficiency =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCdTh7hrBfeclgkmvpZNUH3GsfaEjDlJpLvCxoRG0YhlGjKbcIPefzh2X1brAnl16Mb5Fz8AQrSSUfBS45pA2SmojXxxqEJ_ODAlHWrDcWQyCBeEU2YeQcKofTLXqTMvoOkBkYNO-L1Q605Cj_ON8o44xt45g6GHpsbDKbl9gD_vbVdTIi9ck_1QoA19zmOQ_jD2HjeubDvE_L5OrQEJtEW8izVAls2e_Izzpx0t7Yb96Ll3oPlqaZGSvNWcjYYruiItbmb0jMqo6IN';
+  static const String soilTestingThumbnail =
+      'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&q=80&w=600';
+
+  // Network Images - Stage Guidance
+  static const String stageGuidanceHero =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBkeN8SP23gBEzx7VU6CQnT5G1ZtGwd-aPHEYQHPl76Bw7xIJg_UE8gKiohwTNzTDBXLawRRIIpEHuzm0RbKX63RHKABtVNX9tFnJxAURiWSeSkmox4USOjf5jFZ0_4f9tosE3P3OAaWVCQmqkK7qSjBkVIxmgRFVkQj9IRmARVVhzsSkWmHeLmsAxcx1TRJHgvx86q4KXm6CwOFre57iMde46NHvH9b7g7Xo5ISWnZMxXShq0AqJGmseRr90-UsPVh592mYpwSIRw';
+
+  // Network Images - Success Stories
+  static const String storyRameshThumbnail =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDgukNL0ItEZqPHWqKLmWRYynHjwTdBXfv3dXuSq6WmZ43JVhfXeZJT21cD6XeI8R8A0bfGuXAXoyB_5mjcwm07DHotOniJj9D3_yw_KJoAYzD05VH_gzyqyjPrALsINXGte8GDxe_lvb4h9phygSIkUZlL5iWAOTm9LWjbqnjtZ9hiJlwzOxXWxTfdcSeEMfeleXExNhNzCyqbeY4zKrol0O7kl9SvBdpkdJdUtRkhcZCyoVBg72vmRdtruqw96E8KB22SrlGHTpvh';
+  static const String storySunitaThumbnail =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAA-u6fwsDh2q6tIshdtpAdg9mfSyv1OlVe3liesFDgB-FKgLFCB2ytb28_IAidURzoXtbtHzWnZoi_ZI7XoHOrkZvgASiWd6t320zTRsG9jb7tpCkdq2fas2lnmHjAJxdURlkHqBCmWdJUM_qrqO59yW0eY5WUqXBDAOCVzySs_tRxReHhco-_XKIQEtj4lpsfnWhyFm7IimaiOe7Xvu4ln694xJy1oWiNBzsy9WnrIc1NvAZDhYo1R0eFJ1b6H5C_jXmdhNFxmW_W';
+  static const String storyAnilThumbnail =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDUncnTnypVx1m5eCDeYu1KLkBQ1a5A9TXSxgYly-i3LspBHaZzMz2Y8lXIg-M1bYY4wN19WcTRumAocYlHUqwWvBDkIVB923SfTyAXoYJ-tXFT1zxAKZWG0fD6pBsyXFp2V2YnW2Qo_ohgQGhbS0CA5v8-W90AjfidUUn_A4I4qHpg43hmgWLjJfGdmdxgDG4-BbOZn2DLswUNssZW1ISoYAloGjSrtKwP-ljGKI0_dCoIXyLo5DYEmHAI0DOpA1h0PsFshjHISCfR';
+  static const String storyAuthorPlaceholder2 =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBGXfa2LCFWeJ3D4Lz86gXaUIz-KCxkhsFFsgAr9EmQWUbmdCs8n5BNefxaLTsBeRYhXNCLZzm-ywKcExgroeW2-8skswreGU3DMFc_aDEI18dIwRhtYyjRVp4ztHQ-S3-oDeCDqfv4U5rJfsdYtpD8Mh0QJEqtVRx_XEsIfPf5vPpOZaY7x48JnmjMcNYkk12mVbuRTOPOUADo0X9aA9PuLkqctDR5FPb6WiqhUVRL0CQIN9nXH3cghRD8o8DsskAJ-i_VbYUOFo4U';
+  static const String storyAuthorPlaceholder3 =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBGXfa2LCFWeJ3D4Lz86gXaUIz-KCxkhsFFsgAr9EmQWUbmdCs8n5BNefxaLTsBeRYhXNCLZzm-ywKcExgroeW2-8skswreGU3DMFc_aDEI18dIwRhtYyjRVp4ztHQ-S3-oDeCDqfv4U5rJfsdYtpD8Mh0QJEqtVRx_XEsIfPf5vPpOZaY7x48JnmjMcNYkk12mVbuRTOPOUADo0X9aA9PuLkqctDR5FPb6WiqhUVRL0CQIN9nXH3cghRD8o8DsskAJ-i_VbYUOFo4U';
+}

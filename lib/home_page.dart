@@ -17,6 +17,8 @@ import 'all_plots_page.dart';
 import 'models/plot_model.dart';
 import 'plot_analytics_page.dart';
 import 'expense_plot_list_page.dart';
+import 'screens/agri_forecast_screen.dart';
+import 'agribot_chat_page.dart';
 
 class HomePage extends StatefulWidget {
   final String? userName;
@@ -222,7 +224,7 @@ class _HomePageState extends State<HomePage> {
     if (index == 4) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AgriUniPage()),
+        MaterialPageRoute(builder: (context) => AgriUniversityApp()),
       );
       return;
     }
@@ -289,7 +291,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.notifications_outlined,
+            icon: const Icon(Icons.language,
                 color: Colors.black87, size: 24),
             onPressed: () {
               Navigator.push(
@@ -890,7 +892,7 @@ class _DashboardContentState extends State<DashboardContent>
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis),
-            Text('${plot.area} Acre',
+            Text('${plot.area.toStringAsFixed(2)} Acre',
                 style: GoogleFonts.inter(
                     fontSize: 10, color: Colors.grey[600])),
           ],
@@ -948,7 +950,12 @@ class _DashboardContentState extends State<DashboardContent>
                   icon: Icons.psychology,
                   title: 'Cropwell Expert',
                   color: const Color(0xFFFF9800),
-                  onTap: () {},
+                
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AgribotChatPage()),);
+                  },
                 ),
               ),
               const SizedBox(width: 12),
@@ -957,11 +964,7 @@ class _DashboardContentState extends State<DashboardContent>
                   icon: Icons.bug_report,
                   title: 'Crop Predictor',
                   color: const Color(0xFF9C27B0),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DiseaseHomePage()),
-                  ),
+                  onTap: () => {}
                 ),
               ),
             ],
@@ -1117,9 +1120,13 @@ class _DashboardContentState extends State<DashboardContent>
               Expanded(
                 child: _buildMarketCard(
                   icon: Icons.agriculture,
-                  title: 'Price Forecasting',
+                  title: 'Price Trend Analysis',
                   color: const Color(0xFF4CAF50),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AgriForecastScreen()),);
+                  },
                 ),
               ),
               const SizedBox(width: 12),

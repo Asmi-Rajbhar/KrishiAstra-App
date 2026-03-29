@@ -1,362 +1,304 @@
-// lib/pages/agri_uni_page.dart
+import 'package:krishiastra/app/core/bloc/language/language_bloc.dart';
+import 'package:krishiastra/app/core/bloc/language/language_event.dart';
+import 'package:krishiastra/app/core/bloc/language/language_state.dart';
+import 'package:krishiastra/app/core/navigation/app_router.dart';
+import 'package:krishiastra/app/core/network/dio_client.dart';
+import 'package:krishiastra/app/core/network/api_constants.dart';
+import 'package:krishiastra/app/core/security/storage_service.dart';
+import 'package:krishiastra/app/features/home/domain/repositories/i_home_repository.dart';
+import 'package:krishiastra/app/features/home/data/repositories/home_repository.dart';
+import 'package:krishiastra/app/features/crop_variety/presentation/bloc/crop_variety_bloc.dart';
+import 'package:krishiastra/app/features/crop_variety/presentation/providers/crop_provider.dart';
+import 'package:krishiastra/app/features/diagnostics/presentation/bloc/diagnostic_bloc.dart';
+import 'package:krishiastra/app/features/lifecycle_management/presentation/bloc/lifecycle_management_bloc.dart';
+import 'package:krishiastra/app/features/lifecycle_management/presentation/bloc/stage_bloc.dart';
+import 'package:krishiastra/app/features/video_gallery/presentation/bloc/video_gallery_bloc.dart';
+import 'package:krishiastra/app/features/diagnostics/presentation/bloc/scanner/scanner_bloc.dart';
+import 'package:krishiastra/app/features/crop_variety/data/repositories/api_crop_repository.dart';
+import 'package:krishiastra/app/features/crop_variety/domain/repositories/i_crop_repository.dart';
+import 'package:krishiastra/app/features/video_gallery/domain/repositories/i_video_repository.dart';
+import 'package:krishiastra/app/features/crop_variety/presentation/bloc/crop_variety_detail_bloc.dart';
+
+import 'package:krishiastra/app/features/diagnostics/domain/repositories/i_diagnostic_repository.dart';
+import 'package:krishiastra/app/features/lifecycle_management/domain/repositories/i_lifecycle_repository.dart';
+import 'package:krishiastra/app/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import 'field_config.dart';
-import 'field_detail_page.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:krishiastra/app/core/l10n/app_localizations.dart';
+import 'package:krishiastra/app/features/success_stories/domain/repositories/i_success_story_repository.dart';
+import 'package:krishiastra/app/features/crop_guide/domain/repositories/i_crop_guide_repository.dart';
+import 'package:krishiastra/app/features/climatic_requirements/domain/repositories/i_climatic_repository.dart';
+import 'package:krishiastra/app/features/climatic_requirements/data/repositories/climatic_repository.dart';
+import 'package:krishiastra/app/features/climatic_requirements/presentation/bloc/climatic_bloc.dart';
+import 'package:krishiastra/app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:krishiastra/app/features/success_stories/presentation/bloc/success_stories_bloc.dart';
+import 'package:krishiastra/app/features/diagnostics/data/repositories/api_diagnostic_repository.dart';
+import 'package:krishiastra/app/features/lifecycle_management/data/repositories/api_lifecycle_repository.dart';
+import 'package:krishiastra/app/features/success_stories/data/repositories/api_story_repository.dart';
+import 'package:krishiastra/app/features/crop_guide/data/repositories/api_crop_guide_repository.dart';
 
-class AgriUniPage extends StatefulWidget {
-  final String cropName;
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-  const AgriUniPage({super.key, this.cropName = 'Sugarcane'});
+void main() async {
+  await dotenv.load();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
 
-  @override
-  State<AgriUniPage> createState() => _AgriUniPageState();
+      // Global Flutter error handler
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.presentError(details);
+        if (kReleaseMode) {
+          // TODO: Send to crash reporter (e.g. Sentry, Firebase Crashlytics)
+          debugPrint('Production Error: ${details.exception}');
+        }
+      };
+
+      // Global ErrorWidget builder override for production
+      ErrorWidget.builder = (FlutterErrorDetails details) {
+        if (kDebugMode) {
+          return ErrorWidget(details.exception);
+        }
+        return const _ProductionErrorWidget();
+      };
+
+      runApp(const AgriUniversityApp());
+    },
+    (error, stackTrace) {
+      debugPrint('Uncaught Error: $error');
+      debugPrint('Stacktrace: $stackTrace');
+      // TODO: Send to crash reporter
+    },
+  );
 }
 
-class _AgriUniPageState extends State<AgriUniPage> {
-  final AuthService _authService = AuthService();
-  Map<String, dynamic>? _cropData;
-  bool _loading = true;
-  String? _error;
+class AgriUniversityApp extends StatefulWidget {
+  const AgriUniversityApp({super.key});
+
+  @override
+  State<AgriUniversityApp> createState() => _AgriUniversityAppState();
+}
+
+class _AgriUniversityAppState extends State<AgriUniversityApp> {
+  late final DioClient _dioClient;
+  bool _isInitializing = true;
 
   @override
   void initState() {
     super.initState();
-    _loadCropData();
+    _dioClient = DioClient();
+    _initializeApp();
   }
 
-  Future<void> _loadCropData() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-
+  Future<void> _initializeApp() async {
     try {
-      final data = await _authService.getCropData(widget.cropName);
-      if (data == null) {
-        setState(() => _error = 'No data found for ${widget.cropName}');
-      } else {
-        setState(() => _cropData = data);
-      }
+      await SharedPreferences.getInstance();
+
+      // Store API token securely
+      await SecureStorageService.saveToken(ApiConstants.apiToken);
+
+      setState(() {
+        _isInitializing = false;
+      });
     } catch (e) {
-      setState(() => _error = 'Failed to load crop data: $e');
-    } finally {
-      setState(() => _loading = false);
+      debugPrint('Warning: Initialization failed: $e');
+      setState(() {
+        _isInitializing = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text(
-          "AgriUniversity",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-        ),
-        centerTitle: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
+    if (_isInitializing) {
+      return const MaterialApp(
+        home: Scaffold(body: Center(child: CircularProgressIndicator())),
+      );
+    }
+
+    return MultiProvider(
+      providers: [Provider<DioClient>.value(value: _dioClient)],
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<IHomeRepository>(create: (_) => HomeRepository()),
+          RepositoryProvider<ICropRepository>(
+            create: (_) => ApiCropRepository(_dioClient.dio),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
+          RepositoryProvider<IDiagnosticRepository>(
+            create: (_) => ApiDiagnosticRepository(_dioClient.dio),
+          ),
+          RepositoryProvider<IVideoRepository>(
+            create: (context) =>
+                RepositoryProvider.of<IDiagnosticRepository>(context)
+                    as IVideoRepository,
+          ),
+          RepositoryProvider<ILifecycleRepository>(
+            create: (context) => ApiLifecycleRepository(
+              _dioClient.dio,
+              RepositoryProvider.of<ICropRepository>(context),
+            ),
+          ),
+          RepositoryProvider<ISuccessStoryRepository>(
+            create: (_) => ApiStoryRepository(_dioClient.dio),
+          ),
+          RepositoryProvider<ICropGuideRepository>(
+            create: (context) => ApiCropGuideRepository(
+              _dioClient.dio,
+              RepositoryProvider.of<IVideoRepository>(context),
+            ),
+          ),
+          RepositoryProvider<IClimaticRepository>(
+            create: (_) => ClimaticRepository(_dioClient.dio),
           ),
         ],
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? _buildErrorState()
-              : _buildOverviewPage(),
-    );
-  }
-
-  Widget _buildErrorState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.red[50],
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.error_outline,
-                size: 40,
-                color: Colors.red,
+        child: MultiProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => LanguageBloc()..add(LoadLanguage()),
+            ),
+            ChangeNotifierProvider(
+              create: (context) =>
+                  CropProvider(RepositoryProvider.of<ICropRepository>(context))
+                    ..loadData(),
+            ),
+            BlocProvider(
+              create: (context) => HomeBloc(
+                homeRepository: RepositoryProvider.of<IHomeRepository>(context),
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Error Loading Data',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _error!,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _loadCropData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF059669),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+            BlocProvider(
+              create: (context) => SuccessStoriesBloc(
+                repository: RepositoryProvider.of<ISuccessStoryRepository>(
+                  context,
                 ),
               ),
-              child: const Text('Retry'),
+            ),
+            BlocProvider(
+              create: (context) => CropVarietyBloc(
+                cropVarietyRepository: RepositoryProvider.of<ICropRepository>(
+                  context,
+                ),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => VideoGalleryBloc(
+                videoRepository: RepositoryProvider.of<IVideoRepository>(
+                  context,
+                ),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => CropVarietyDetailBloc(
+                RepositoryProvider.of<ICropRepository>(context),
+                RepositoryProvider.of<IVideoRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => DiagnosticBloc(
+                diagnosticRepository:
+                    RepositoryProvider.of<IDiagnosticRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => LifecycleManagementBloc(
+                lifecycleRepository:
+                    RepositoryProvider.of<ILifecycleRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => StageBloc(
+                lifecycleRepository:
+                    RepositoryProvider.of<ILifecycleRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => ClimaticBloc(
+                climaticRepository: RepositoryProvider.of<IClimaticRepository>(
+                  context,
+                ),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => ScannerBloc(
+                diagnosticRepository:
+                    RepositoryProvider.of<IDiagnosticRepository>(context),
+              ),
             ),
           ],
+          child: BlocBuilder<LanguageBloc, LanguageState>(
+            builder: (context, state) {
+              return MaterialApp(
+                locale: state.locale,
+                supportedLocales: const [
+                  Locale('en'),
+                  Locale('mr'),
+                  Locale('hi'),
+                  Locale('gu'),
+                  Locale('kn'),
+                ],
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                title: 'AgriUniversity',
+                theme: appTheme,
+                initialRoute: AppRouter.home,
+                onGenerateRoute: AppRouter.onGenerateRoute,
+                builder: (context, child) {
+                  return child ?? const SizedBox.shrink();
+                },
+              );
+            },
+          ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildOverviewPage() {
-    final cropName = _cropData?['crop_name'] ?? widget.cropName;
-    final aboutCrop = _cropData?['about_crop'] ?? 'No information available';
+class _ProductionErrorWidget extends StatelessWidget {
+  const _ProductionErrorWidget();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeroSection(cropName, aboutCrop),
-          const SizedBox(height: 24),
-          const Text(
-            "Crop Details",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          ...fieldConfigs.map((field) => _buildFieldCard(field)),
-          const SizedBox(height: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeroSection(String cropName, String aboutCrop) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1601633534346-7c9b2f29d2b2?q=80&w=800&auto=format&fit=crop',
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (c, o, s) =>
-                      Container(height: 180, color: Colors.grey),
-                ),
-              ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.verified, size: 16, color: Colors.green),
-                      SizedBox(width: 4),
-                      Text(
-                        "OFFICIAL",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'AgriUniversity',
+      theme: appTheme,
+      home: const Scaffold(
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "CURRENT FOCUS",
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                Icon(Icons.error_outline, color: Colors.red, size: 80),
+                SizedBox(height: 24),
                 Text(
-                  cropName,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  'Something went wrong',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                const Text(
-                  "Saccharum officinarum",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Text(
-                  aboutCrop,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                    height: 1.5,
-                  ),
+                  'We encountered an unexpected error. Please restart the application or try again later.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.blueGrey, fontSize: 16),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFieldCard(FieldConfig field) {
-    final hasContent = _cropData?[field.key] != null &&
-        _cropData![field.key].toString().trim().isNotEmpty;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0B3B24),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(field.icon, color: Colors.white, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      field.label,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      field.description,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: hasContent
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FieldDetailPage(
-                            field: field,
-                            content: _cropData![field.key],
-                            cropName: _cropData?['crop_name'] ?? widget.cropName,
-                          ),
-                        ),
-                      );
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0B3B24),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                elevation: 0,
-                disabledBackgroundColor: Colors.grey[300],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    hasContent ? "View Details" : "Coming Soon",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  if (hasContent) ...[
-                    const SizedBox(width: 8),
-                    const Icon(Icons.arrow_forward_ios, size: 16),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

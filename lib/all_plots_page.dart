@@ -40,12 +40,10 @@ class _AllPlotsPageState extends State<AllPlotsPage>
       isLoading = true;
       errorMessage = null;
     });
-
     try {
       final auth = AuthService();
       final list = await auth.fetchPlots();
       final loaded = list.map<Plot>((p) => Plot.fromJson(p)).toList();
-
       if (!mounted) return;
       setState(() {
         myPlots = loaded;
@@ -61,41 +59,39 @@ class _AllPlotsPageState extends State<AllPlotsPage>
   }
 
   List<Plot> get activePlots =>
-      myPlots.where((plot) => plot.status == 'Active').toList();
+      myPlots.where((p) => p.status == 'Active').toList();
 
   List<Plot> get inactivePlots =>
-      myPlots.where((plot) => plot.status == 'Inactive').toList();
+      myPlots.where((p) => p.status == 'Inactive').toList();
 
   List<Plot> _getFilteredAndSortedPlots(List<Plot> plots) {
-    var filteredPlots = plots.where((plot) {
+    var filtered = plots.where((plot) {
       if (searchQuery.isEmpty) return true;
-      return plot.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-          plot.crop.toLowerCase().contains(searchQuery.toLowerCase()) ||
-          plot.location.toLowerCase().contains(searchQuery.toLowerCase());
+      final q = searchQuery.toLowerCase();
+      return plot.name.toLowerCase().contains(q) ||
+          plot.crop.toLowerCase().contains(q) ||
+          plot.location.toLowerCase().contains(q);
     }).toList();
 
     switch (sortBy) {
       case 'area':
-        filteredPlots.sort((a, b) => b.area.compareTo(a.area));
+        filtered.sort((a, b) => b.area.compareTo(a.area));
         break;
       case 'crop':
-        filteredPlots.sort((a, b) => a.crop.compareTo(b.crop));
+        filtered.sort((a, b) => a.crop.compareTo(b.crop));
         break;
       case 'name':
       default:
-        filteredPlots.sort((a, b) => a.name.compareTo(b.name));
-        break;
+        filtered.sort((a, b) => a.name.compareTo(b.name));
     }
-
-    return filteredPlots;
+    return filtered;
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final totalArea = myPlots.fold<double>(0, (sum, plot) => sum + plot.area);
-    final activeArea =
-        activePlots.fold<double>(0, (sum, plot) => sum + plot.area);
+    final totalArea = myPlots.fold<double>(0, (s, p) => s + p.area);
+    final activeArea = activePlots.fold<double>(0, (s, p) => s + p.area);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -103,18 +99,14 @@ class _AllPlotsPageState extends State<AllPlotsPage>
         title: Text(
           l10n.myPlots,
           style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+              fontWeight: FontWeight.w600, fontSize: 20, color: Colors.white),
         ),
         leading: IconButton(
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
-            ),
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           onPressed: () => Navigator.pop(context),
@@ -136,29 +128,28 @@ class _AllPlotsPageState extends State<AllPlotsPage>
           indicatorWeight: 3,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white.withOpacity(0.6),
-          labelStyle: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600),
-          unselectedLabelStyle:
-              GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w500),
+          labelStyle: GoogleFonts.poppins(
+              fontSize: 15, fontWeight: FontWeight.w600),
+          unselectedLabelStyle: GoogleFonts.poppins(
+              fontSize: 15, fontWeight: FontWeight.w500),
           tabs: [
             Tab(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.check_circle_outline, size: 18),
-                  const SizedBox(width: 6),
-                  Text('Active (${activePlots.length})'),
-                ],
-              ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.check_circle_outline, size: 18),
+                    const SizedBox(width: 6),
+                    Text('Active (${activePlots.length})'),
+                  ]),
             ),
             Tab(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.archive_outlined, size: 18),
-                  const SizedBox(width: 6),
-                  Text('Inactive (${inactivePlots.length})'),
-                ],
-              ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.archive_outlined, size: 18),
+                    const SizedBox(width: 6),
+                    Text('Inactive (${inactivePlots.length})'),
+                  ]),
             ),
           ],
         ),
@@ -174,177 +165,147 @@ class _AllPlotsPageState extends State<AllPlotsPage>
         child: SafeArea(
           child: Column(
             children: [
-              // Stats Header
+              // ── Stats header ──────────────────────────────────────────────
               Container(
                 margin: const EdgeInsets.all(20),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                  ),
+                      colors: [Color(0xFF667eea), Color(0xFF764ba2)]),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF667eea).withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
+                        color: const Color(0xFF667eea).withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10))
                   ],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(
-                      Icons.landscape_outlined,
-                      myPlots.length.toString(),
-                      l10n.totalPlots,
-                    ),
+                    _buildStatItem(Icons.landscape_outlined,
+                        myPlots.length.toString(), l10n.totalPlots),
                     Container(
-                      width: 1,
-                      height: 50,
-                      color: Colors.white.withOpacity(0.3),
-                    ),
-                    _buildStatItem(
-                      Icons.square_foot,
-                      totalArea.toStringAsFixed(1),
-                      l10n.acres,
-                    ),
+                        width: 1,
+                        height: 50,
+                        color: Colors.white.withOpacity(0.3)),
+                    _buildStatItem(Icons.square_foot,
+                        totalArea.toStringAsFixed(1), l10n.acres),
                     Container(
-                      width: 1,
-                      height: 50,
-                      color: Colors.white.withOpacity(0.3),
-                    ),
-                    _buildStatItem(
-                      Icons.check_circle,
-                      activeArea.toStringAsFixed(1),
-                      'Active ${l10n.acres}',
-                    ),
+                        width: 1,
+                        height: 50,
+                        color: Colors.white.withOpacity(0.3)),
+                    _buildStatItem(Icons.check_circle,
+                        activeArea.toStringAsFixed(1), 'Active ${l10n.acres}'),
                   ],
                 ),
               ),
 
-              // Search and Filter Bar
+              // ── Search + Sort ──────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[300]!),
-                          boxShadow: [
-                            BoxShadow(
+                child: Row(children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey[300]!),
+                        boxShadow: [
+                          BoxShadow(
                               color: Colors.black.withOpacity(0.05),
                               blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                              offset: const Offset(0, 2))
+                        ],
+                      ),
+                      child: TextField(
+                        onChanged: (v) => setState(() => searchQuery = v),
+                        decoration: InputDecoration(
+                          hintText: 'Search plots...',
+                          hintStyle: GoogleFonts.poppins(
+                              color: Colors.grey[400], fontSize: 14),
+                          border: InputBorder.none,
+                          icon: Icon(Icons.search, color: Colors.grey[400]),
                         ),
-                        child: TextField(
-                          onChanged: (value) =>
-                              setState(() => searchQuery = value),
-                          decoration: InputDecoration(
-                            hintText: 'Search plots...',
-                            hintStyle: GoogleFonts.poppins(
-                              color: Colors.grey[400],
-                              fontSize: 14,
-                            ),
-                            border: InputBorder.none,
-                            icon: Icon(Icons.search, color: Colors.grey[400]),
-                          ),
-                          style: GoogleFonts.poppins(fontSize: 14),
-                        ),
+                        style: GoogleFonts.poppins(fontSize: 14),
                       ),
                     ),
-                    const SizedBox(width: 12),
-
-                    // Sort Button
-                    PopupMenuButton<String>(
-                      onSelected: (value) => setState(() => sortBy = value),
-                      itemBuilder: (context) => [
-                        _buildSortMenuItem('name', 'Sort by Name',
-                            Icons.sort_by_alpha),
-                        _buildSortMenuItem('area', 'Sort by Area',
-                            Icons.square_foot),
-                        _buildSortMenuItem('crop', 'Sort by Crop', Icons.grass),
-                      ],
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[300]!),
-                          boxShadow: [
-                            BoxShadow(
+                  ),
+                  const SizedBox(width: 12),
+                  PopupMenuButton<String>(
+                    onSelected: (v) => setState(() => sortBy = v),
+                    itemBuilder: (context) => [
+                      _buildSortMenuItem(
+                          'name', 'Sort by Name', Icons.sort_by_alpha),
+                      _buildSortMenuItem(
+                          'area', 'Sort by Area', Icons.square_foot),
+                      _buildSortMenuItem('crop', 'Sort by Crop', Icons.grass),
+                    ],
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey[300]!),
+                        boxShadow: [
+                          BoxShadow(
                               color: Colors.black.withOpacity(0.05),
                               blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(Icons.filter_list, color: Colors.grey[600]),
+                              offset: const Offset(0, 2))
+                        ],
                       ),
+                      child:
+                          Icon(Icons.filter_list, color: Colors.grey[600]),
                     ),
-                  ],
-                ),
+                  ),
+                ]),
               ),
 
               const SizedBox(height: 20),
 
-              // Plots List with Tabs
+              // ── Tab content ───────────────────────────────────────────────
               Expanded(
                 child: isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
-                          color: Color(0xFF0A6F3B),
-                        ),
-                      )
+                            color: Color(0xFF0A6F3B)))
                     : errorMessage != null
                         ? Center(
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.error_outline,
-                                    size: 64, color: Colors.red[300]),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Failed to load plots',
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.error_outline,
+                                  size: 64, color: Colors.red[300]),
+                              const SizedBox(height: 16),
+                              Text('Failed to load plots',
                                   style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  errorMessage!,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey[700])),
+                              const SizedBox(height: 8),
+                              Text(errorMessage!,
                                   style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 24),
-                                ElevatedButton.icon(
-                                  onPressed: _loadPlots,
-                                  icon: const Icon(Icons.refresh),
-                                  label: Text('Retry',
-                                      style: GoogleFonts.poppins()),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF0A6F3B),
+                                      fontSize: 14,
+                                      color: Colors.grey[600]),
+                                  textAlign: TextAlign.center),
+                              const SizedBox(height: 24),
+                              ElevatedButton.icon(
+                                onPressed: _loadPlots,
+                                icon: const Icon(Icons.refresh),
+                                label: Text('Retry',
+                                    style: GoogleFonts.poppins()),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color(0xFF0A6F3B),
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 24, vertical: 12),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
+                                        borderRadius:
+                                            BorderRadius.circular(12))),
+                              ),
+                            ],
+                          ))
                         : TabBarView(
                             controller: _tabController,
                             children: [
@@ -361,72 +322,66 @@ class _AllPlotsPageState extends State<AllPlotsPage>
   }
 
   PopupMenuItem<String> _buildSortMenuItem(
-      String value, String label, IconData icon) {
-    return PopupMenuItem(
-      value: value,
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: sortBy == value ? const Color(0xFF0A6F3B) : Colors.grey[600],
-            size: 20,
-          ),
+          String value, String label, IconData icon) =>
+      PopupMenuItem(
+        value: value,
+        child: Row(children: [
+          Icon(icon,
+              color: sortBy == value
+                  ? const Color(0xFF0A6F3B)
+                  : Colors.grey[600],
+              size: 20),
           const SizedBox(width: 12),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              color: sortBy == value ? const Color(0xFF0A6F3B) : Colors.grey[800],
-              fontWeight:
-                  sortBy == value ? FontWeight.w600 : FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          Text(label,
+              style: GoogleFonts.poppins(
+                  color: sortBy == value
+                      ? const Color(0xFF0A6F3B)
+                      : Colors.grey[800],
+                  fontWeight: sortBy == value
+                      ? FontWeight.w600
+                      : FontWeight.w500)),
+        ]),
+      );
 
   Widget _buildPlotsList(
       List<Plot> plots, AppLocalizations l10n, bool isActive) {
-    final displayPlots = _getFilteredAndSortedPlots(plots);
+    final display = _getFilteredAndSortedPlots(plots);
 
-    if (displayPlots.isEmpty) {
+    if (display.isEmpty) {
       return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              searchQuery.isNotEmpty
-                  ? Icons.search_off
-                  : isActive
-                      ? Icons.landscape_outlined
-                      : Icons.archive_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              searchQuery.isNotEmpty
-                  ? 'No plots found'
-                  : isActive
-                      ? 'No active plots'
-                      : 'No inactive plots',
-              style: GoogleFonts.poppins(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(
+            searchQuery.isNotEmpty
+                ? Icons.search_off
+                : isActive
+                    ? Icons.landscape_outlined
+                    : Icons.archive_outlined,
+            size: 64,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            searchQuery.isNotEmpty
+                ? 'No plots found'
+                : isActive
+                    ? 'No active plots'
+                    : 'No inactive plots',
+            style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              searchQuery.isNotEmpty
-                  ? 'Try a different search term'
-                  : isActive
-                      ? 'All your plots are inactive'
-                      : 'All your plots are active',
-              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
-            ),
-          ],
-        ),
+                color: Colors.grey[700]),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            searchQuery.isNotEmpty
+                ? 'Try a different search term'
+                : isActive
+                    ? 'All your plots are inactive'
+                    : 'All your plots are active',
+            style: GoogleFonts.poppins(
+                fontSize: 14, color: Colors.grey[600]),
+          ),
+        ]),
       );
     }
 
@@ -435,41 +390,29 @@ class _AllPlotsPageState extends State<AllPlotsPage>
       color: const Color(0xFF0A6F3B),
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        itemCount: displayPlots.length,
-        itemBuilder: (context, index) {
-          return _buildPlotCard(
-              context, displayPlots[index], index, l10n, isActive);
-        },
+        itemCount: display.length,
+        itemBuilder: (context, index) =>
+            _buildPlotCard(context, display[index], index, l10n, isActive),
       ),
     );
   }
 
-  Widget _buildStatItem(IconData icon, String value, String label) {
-    return Column(
-      children: [
+  Widget _buildStatItem(IconData icon, String value, String label) =>
+      Column(children: [
         Icon(icon, color: Colors.white, size: 32),
         const SizedBox(height: 8),
-        Text(
-          value,
-          style: GoogleFonts.poppins(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            color: Colors.white.withOpacity(0.9),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
+        Text(value,
+            style: GoogleFonts.poppins(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+        Text(label,
+            style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Colors.white.withOpacity(0.9),
+                fontWeight: FontWeight.w500)),
+      ]);
 
-  /// Returns a soil-type colour used for the small badge on the card
   Color _soilColor(String soilType) {
     final lower = soilType.toLowerCase();
     if (lower.contains('alluvial')) return const Color(0xFF2196F3);
@@ -483,7 +426,7 @@ class _AllPlotsPageState extends State<AllPlotsPage>
       return const Color(0xFF2E7D32);
     if (lower.contains('saline') || lower.contains('alkaline'))
       return const Color(0xFF6A1B9A);
-    return const Color(0xFF8B6914); // default brown
+    return const Color(0xFF8B6914);
   }
 
   Widget _buildPlotCard(
@@ -498,12 +441,10 @@ class _AllPlotsPageState extends State<AllPlotsPage>
     return TweenAnimationBuilder(
       duration: Duration(milliseconds: 300 + (index * 50)),
       tween: Tween<double>(begin: 0, end: 1),
-      builder: (context, double value, child) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(opacity: value, child: child),
-        );
-      },
+      builder: (context, double value, child) => Transform.translate(
+        offset: Offset(0, 20 * (1 - value)),
+        child: Opacity(opacity: value, child: child),
+      ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
@@ -517,29 +458,32 @@ class _AllPlotsPageState extends State<AllPlotsPage>
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 20,
+                offset: const Offset(0, 4))
           ],
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {
-              Navigator.push(
+            // ── KEY CHANGE: await the push; refresh list when we return ──
+            onTap: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PlotDetailsPage(plot: plot),
                 ),
               );
+              // PlotDetailsPage may have edited the plot — re-fetch so the
+              // card shows the latest data (soil type, crop name, etc.)
+              _loadPlots();
             },
             borderRadius: BorderRadius.circular(20),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Plot Image with Status Indicator
+                  // ── Plot image with status dot ──────────────────────────
                   Stack(
                     children: [
                       ClipRRect(
@@ -560,19 +504,14 @@ class _AllPlotsPageState extends State<AllPlotsPage>
                               width: 80,
                               height: 80,
                               decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                Icons.image_not_supported_outlined,
-                                color: Colors.grey[400],
-                                size: 32,
-                              ),
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Icon(Icons.image_not_supported_outlined,
+                                  color: Colors.grey[400], size: 32),
                             ),
                           ),
                         ),
                       ),
-                      // Status Badge
                       Positioned(
                         top: 4,
                         right: 4,
@@ -585,16 +524,14 @@ class _AllPlotsPageState extends State<AllPlotsPage>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 4,
-                              ),
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 4)
                             ],
                           ),
                           child: Icon(
-                            isActive ? Icons.check : Icons.archive,
-                            color: Colors.white,
-                            size: 14,
-                          ),
+                              isActive ? Icons.check : Icons.archive,
+                              color: Colors.white,
+                              size: 14),
                         ),
                       ),
                     ],
@@ -602,169 +539,150 @@ class _AllPlotsPageState extends State<AllPlotsPage>
 
                   const SizedBox(width: 12),
 
-                  // Plot Info
+                  // ── Plot details ──────────────────────────────────────────
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Name + Farming Type badge
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                plot.name,
-                                style: GoogleFonts.poppins(
+                        // Name + farming type badge
+                        Row(children: [
+                          Expanded(
+                            child: Text(
+                              plot.name,
+                              style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: isActive
                                       ? Colors.black87
-                                      : Colors.grey[600],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                                      : Colors.grey[600]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(width: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: plot.farmingType == 'Organic'
+                                  ? const Color(0xFF4CAF50).withOpacity(0.1)
+                                  : const Color(0xFF2196F3).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              plot.farmingType,
+                              style: GoogleFonts.poppins(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w600,
                                 color: plot.farmingType == 'Organic'
-                                    ? const Color(0xFF4CAF50).withOpacity(0.1)
-                                    : const Color(0xFF2196F3).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                plot.farmingType,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w600,
-                                  color: plot.farmingType == 'Organic'
-                                      ? const Color(0xFF4CAF50)
-                                      : const Color(0xFF2196F3),
-                                ),
+                                    ? const Color(0xFF4CAF50)
+                                    : const Color(0xFF2196F3),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ]),
                         const SizedBox(height: 5),
 
                         // Crop
-                        Row(
-                          children: [
-                            Icon(Icons.grass, size: 13, color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                plot.crop,
+                        Row(children: [
+                          Icon(Icons.grass, size: 13, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(plot.crop,
                                 style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: Colors.grey[700],
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                    fontSize: 12,
+                                    color: Colors.grey[700],
+                                    fontWeight: FontWeight.w500),
                                 maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                        ]),
                         const SizedBox(height: 4),
 
                         // Area + Irrigation
-                        Row(
-                          children: [
-                            Icon(Icons.square_foot,
-                                size: 13, color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${plot.area} ${l10n.acres}',
+                        Row(children: [
+                          Icon(Icons.square_foot,
+                              size: 13, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
+                          Text('${plot.area} ${l10n.acres}',
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(Icons.water_drop,
-                                size: 13, color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                plot.irrigationType.split(' ')[0],
-                                style: GoogleFonts.poppins(
                                   fontSize: 12,
                                   color: Colors.grey[700],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                                  fontWeight: FontWeight.w500)),
+                          const SizedBox(width: 8),
+                          Icon(Icons.water_drop,
+                              size: 13, color: Colors.grey[600]),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              plot.irrigationType.split(' ')[0],
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.w500),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ),
+                          ),
+                        ]),
                         const SizedBox(height: 4),
 
-                        // ── Soil Type badge row ──────────────────────────
+                        // Soil type badge
                         if (plot.soilType.isNotEmpty)
-                          Row(
-                            children: [
-                              Icon(Icons.landscape_outlined,
-                                  size: 13, color: soilColor),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: soilColor.withOpacity(0.08),
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                        color: soilColor.withOpacity(0.25)),
-                                  ),
-                                  child: Text(
-                                    plot.soilType,
-                                    style: GoogleFonts.poppins(
+                          Row(children: [
+                            Icon(Icons.landscape_outlined,
+                                size: 13, color: soilColor),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: soilColor.withOpacity(0.08),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                      color: soilColor.withOpacity(0.25)),
+                                ),
+                                child: Text(
+                                  plot.soilType,
+                                  style: GoogleFonts.poppins(
                                       fontSize: 10,
                                       color: soilColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                        // Harvest date for inactive plots
-                        if (!isActive) ...[
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(Icons.calendar_today,
-                                  size: 13, color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  'Harvested: ${plot.harvestDate}',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 11,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                      fontWeight: FontWeight.w600),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ]),
+
+                        // Harvest date for inactive plots
+                        if (!isActive) ...[
+                          const SizedBox(height: 4),
+                          Row(children: [
+                            Icon(Icons.calendar_today,
+                                size: 13, color: Colors.grey[600]),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                'Harvested: ${plot.harvestDate}',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ]),
                         ],
                       ],
                     ),
                   ),
 
                   const SizedBox(width: 4),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey[400]),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 14, color: Colors.grey[400]),
                 ],
               ),
             ),

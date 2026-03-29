@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
-import '../splash_screen.dart'; // Import your Splash Screen
 
 // Define the model here or in a separate file
 class LanguageOption {
@@ -164,10 +163,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
                     // 2. Navigate to Splash Screen
                     if (mounted) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SplashScreen()),
-                      );
+                      Navigator.pop(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(
