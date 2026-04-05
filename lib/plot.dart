@@ -100,8 +100,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           final polygon = turf.Polygon(coordinates: coords);
           final areaSqMeters = turf.area(polygon);
           final areaAcres = (areaSqMeters ?? 0) / 4046.856;
-          // Translated Acres
-          _areaDisplay = '${areaAcres.toStringAsFixed(3)} ${l10n.acres}';
+          // Changed: 1 decimal place
+          _areaDisplay = '${areaAcres.toStringAsFixed(1)} ${l10n.acres}';
         }
       });
     }
@@ -130,7 +130,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     final areaAcres = (areaSqMeters ?? 0) / 4046.856;
 
     setState(() {
-      _areaDisplay = '${areaAcres.toStringAsFixed(3)} ${l10n.acres}';
+      // Changed: 1 decimal place
+      _areaDisplay = '${areaAcres.toStringAsFixed(1)} ${l10n.acres}';
     });
 
     Navigator.push(
@@ -298,7 +299,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           final polygon = turf.Polygon(coordinates: coords);
           final areaSqMeters = turf.area(polygon);
           final areaAcres = (areaSqMeters ?? 0) / 4046.856;
-          _areaDisplay = '${areaAcres.toStringAsFixed(3)} ${l10n.acres}';
+          // Changed: 1 decimal place
+          _areaDisplay = '${areaAcres.toStringAsFixed(1)} ${l10n.acres}';
         } else {
           _areaDisplay = l10n.tapToAdd; // Translated
         }
