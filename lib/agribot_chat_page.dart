@@ -1,8 +1,3 @@
-// agribot_chat_page.dart — AgriBot Flutter page v10
-// Fixes:
-// 1. Language change resets page completely (pushReplacement)
-// 2. Questions loaded only from Frappe
-// 3. No hardcoded questions
 
 import 'dart:convert';
 import 'dart:math' as math;
