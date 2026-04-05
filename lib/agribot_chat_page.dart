@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-const String kBaseUrl = 'https://safarnxma-agribot-backend.hf.space';
+const String kBaseUrl = 'https://KrishiAstra-agribot-backend.hf.space';
 
 // ─── Language config ──────────────────────────────────────────────────────────
 
