@@ -693,6 +693,7 @@ class AppLocalizationsGu extends AppLocalizations {
   String get enterSaleDetails => 'માન્ય વેચાણ વિગતો દાખલ કરો';
 
   @override
+<<<<<<< HEAD
   String get cropRice => 'ચોખા';
 
   @override
@@ -932,4 +933,76 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get errorSavingPlot => 'પ્લોટ સાચવવામાં ભૂલ: ';
+=======
+  String get cropRice => 'Rice';
+
+  @override
+  String get cropWheat => 'Wheat';
+
+  @override
+  String get cropCorn => 'Corn (Maize)';
+
+  @override
+  String get cropSorghum => 'Sorghum';
+
+  @override
+  String get cropMillet => 'Millet';
+
+  @override
+  String get cropSugarcane => 'Sugarcane';
+
+  @override
+  String get cropTomato => 'Tomato';
+
+  @override
+  String get cropPotato => 'Potato';
+
+  @override
+  String get cropBrinjal => 'Brinjal';
+
+  @override
+  String get cropCapsicum => 'Capsicum';
+
+  @override
+  String get yieldTypeGrain => 'Grain';
+
+  @override
+  String get yieldTypeVegetable => 'Vegetable';
+
+  @override
+  String get yieldTypeFruit => 'Fruit';
+
+  @override
+  String get yieldTypeFiber => 'Fiber';
+
+  @override
+  String get expSeeds => 'Seeds';
+
+  @override
+  String get expFertilizer => 'Fertilizer';
+
+  @override
+  String get expLabor => 'Labor';
+
+  @override
+  String get expIrrigation => 'Irrigation';
+
+  @override
+  String get expMachinery => 'Machinery';
+
+  @override
+  String get expTransport => 'Transport';
+
+  @override
+  String get expOther => 'Other';
+
+  @override
+  String get unitKg => 'Kg';
+
+  @override
+  String get unitQuintal => 'Quintal';
+
+  @override
+  String get unitTon => 'Ton';
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 }

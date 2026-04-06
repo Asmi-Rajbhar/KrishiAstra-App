@@ -12,8 +12,12 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+<<<<<<< HEAD
   static const String baseUrl =
       'http://110.225.251.16:4445'; // Change to your server IP if needed
+=======
+  static const String baseUrl = 'http://110.225.251.16:4445'; // Change to your server IP if needed
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 
   final _formKey = GlobalKey<FormState>();
 
@@ -22,17 +26,25 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+<<<<<<< HEAD
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+=======
+  final TextEditingController _confirmPasswordController = TextEditingController();
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
   /// Call Frappe API to register farmer with basic info only
   Future<String?> _registerBasicAccount() async {
+<<<<<<< HEAD
     final url = Uri.parse(
       '$baseUrl/api/method/krishiastra_app.api.register.register_farmer_basic',
     );
+=======
+    final url = Uri.parse('$baseUrl/api/method/krishiastra_app.api.register.register_farmer_basic');
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 
     try {
       final response = await http.post(
@@ -114,10 +126,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Main card container
                 Container(
                   width: double.infinity,
+<<<<<<< HEAD
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 10,
                   ),
+=======
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
@@ -137,10 +153,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         // Header section
                         Container(
                           width: double.infinity,
+<<<<<<< HEAD
                           padding: const EdgeInsets.symmetric(
                             vertical: 32,
                             horizontal: 24,
                           ),
+=======
+                          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                           decoration: const BoxDecoration(
                             gradient: LinearGradient(
                               colors: [Color(0xFF1C6B3C), Color(0xFF2A8F52)],
@@ -173,10 +193,14 @@ class _RegisterPageState extends State<RegisterPage> {
                               GestureDetector(
                                 onTap: () => Navigator.pop(context),
                                 child: Container(
+<<<<<<< HEAD
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 8,
                                   ),
+=======
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(20),
@@ -184,11 +208,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
+<<<<<<< HEAD
                                       const Icon(
                                         Icons.arrow_back,
                                         color: Colors.white,
                                         size: 16,
                                       ),
+=======
+                                      const Icon(Icons.arrow_back, color: Colors.white, size: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                       const SizedBox(width: 8),
                                       Text(
                                         l10n.alreadyHaveAccount,
@@ -213,7 +241,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+<<<<<<< HEAD
                                 l10n.createYourAccountSubtitle,
+=======
+                                "Create your account",
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   color: Colors.grey[600],
@@ -221,6 +253,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               const SizedBox(height: 16),
+<<<<<<< HEAD
 
                               buildField(
                                 l10n.fullName,
@@ -254,6 +287,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                 true,
                                 l10n,
                               ),
+=======
+                              
+                              buildField(l10n.fullName, _nameController, Icons.badge_outlined, l10n),
+                              buildField(l10n.phoneNum, _phoneController, Icons.phone_outlined, l10n,
+                                  keyboardType: TextInputType.phone),
+                              buildField(l10n.email, _emailController, Icons.email_outlined, l10n,
+                                  keyboardType: TextInputType.emailAddress),
+                              buildPasswordField(l10n.password, _passwordController, false, l10n),
+                              buildPasswordField(l10n.confirmPassword, _confirmPasswordController, true, l10n),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 
                               const SizedBox(height: 24),
                               // Register button
@@ -262,17 +305,25 @@ class _RegisterPageState extends State<RegisterPage> {
                                 height: 56,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
+<<<<<<< HEAD
                                     colors: [
                                       Color(0xFF1C6B3C),
                                       Color(0xFF2A8F52),
                                     ],
+=======
+                                    colors: [Color(0xFF1C6B3C), Color(0xFF2A8F52)],
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                   ),
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
+<<<<<<< HEAD
                                       color: const Color(
                                         0xFF1C6B3C,
                                       ).withOpacity(0.4),
+=======
+                                      color: const Color(0xFF1C6B3C).withOpacity(0.4),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                       blurRadius: 12,
                                       offset: const Offset(0, 6),
                                     ),
@@ -280,6 +331,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 child: ElevatedButton(
                                   onPressed: () async {
+<<<<<<< HEAD
                                     if (!_formKey.currentState!.validate())
                                       return;
 
@@ -294,6 +346,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                           content: Text(
                                             l10n.passwordsDoNotMatch,
                                           ),
+=======
+                                    if (!_formKey.currentState!.validate()) return;
+
+                                    // Check password match
+                                    if (_passwordController.text.trim() != _confirmPasswordController.text.trim()) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Passwords do not match"),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                           backgroundColor: Colors.red,
                                         ),
                                       );
@@ -302,8 +363,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     // Show loading message
                                     ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
                                       SnackBar(
                                         content: Text(l10n.creatingAccount),
+=======
+                                      const SnackBar(
+                                        content: Text("Creating account..."),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                         backgroundColor: Color(0xFF1C6B3C),
                                         duration: Duration(seconds: 2),
                                       ),
@@ -316,6 +382,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     if (error == null) {
                                       // Show success message
+<<<<<<< HEAD
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
@@ -323,22 +390,35 @@ class _RegisterPageState extends State<RegisterPage> {
                                           content: Text(
                                             l10n.accountCreatedSuccess,
                                           ),
+=======
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Account created successfully! Please login."),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                           backgroundColor: Colors.green,
                                           duration: Duration(seconds: 2),
                                         ),
                                       );
 
                                       // Navigate back to login page after delay
+<<<<<<< HEAD
                                       await Future.delayed(
                                         const Duration(seconds: 2),
                                       );
+=======
+                                      await Future.delayed(const Duration(seconds: 2));
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                       if (!mounted) return;
                                       Navigator.pop(context);
                                     } else {
                                       // Show error
+<<<<<<< HEAD
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
+=======
+                                      ScaffoldMessenger.of(context).showSnackBar(
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                         SnackBar(
                                           content: Text(error),
                                           backgroundColor: Colors.red,
@@ -396,10 +476,14 @@ class _RegisterPageState extends State<RegisterPage> {
         style: GoogleFonts.poppins(fontSize: 14),
         decoration: InputDecoration(
           labelText: label,
+<<<<<<< HEAD
           labelStyle: GoogleFonts.poppins(
             fontSize: 14,
             color: Colors.grey[600],
           ),
+=======
+          labelStyle: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           prefixIcon: Icon(icon, color: const Color(0xFF1C6B3C), size: 20),
           filled: true,
           fillColor: Colors.grey[50],
@@ -419,6 +503,7 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
+<<<<<<< HEAD
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 16,
@@ -426,6 +511,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         validator:
             (value) => value!.isEmpty ? "${l10n.pleaseEnter} $label" : null,
+=======
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
+        validator: (value) => value!.isEmpty ? "${l10n.pleaseEnter} $label" : null,
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
       ),
     );
   }
@@ -444,6 +534,7 @@ class _RegisterPageState extends State<RegisterPage> {
         style: GoogleFonts.poppins(fontSize: 14),
         decoration: InputDecoration(
           labelText: label,
+<<<<<<< HEAD
           labelStyle: GoogleFonts.poppins(
             fontSize: 14,
             color: Colors.grey[600],
@@ -453,6 +544,10 @@ class _RegisterPageState extends State<RegisterPage> {
             color: Color(0xFF1C6B3C),
             size: 20,
           ),
+=======
+          labelStyle: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+          prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF1C6B3C), size: 20),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           suffixIcon: IconButton(
             icon: Icon(
               (isConfirm ? _obscureConfirmPassword : _obscurePassword)
@@ -489,6 +584,7 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
+<<<<<<< HEAD
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 16,
@@ -496,6 +592,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         validator:
             (value) => value!.isEmpty ? "${l10n.pleaseEnter} $label" : null,
+=======
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
+        validator: (value) => value!.isEmpty ? "${l10n.pleaseEnter} $label" : null,
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
       ),
     );
   }
@@ -509,4 +610,8 @@ class _RegisterPageState extends State<RegisterPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09

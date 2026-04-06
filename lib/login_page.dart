@@ -55,9 +55,12 @@ class _LoginPageState extends State<LoginPage>
   Future<void> _performLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
+<<<<<<< HEAD
     // Fetch l10n here so it can be used safely in the snackbars!
     final l10n = AppLocalizations.of(context)!;
 
+=======
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     // Show loading dialog
     showDialog(
       context: context,
@@ -77,14 +80,22 @@ class _LoginPageState extends State<LoginPage>
       if (error == null) {
         // Login successful - fetch user data dynamically using sid
         final userData = await _auth.getCurrentUserDetails();
+<<<<<<< HEAD
 
         // Get cached full name for immediate display
         final cachedFullName = await _auth.getStoredFullName();
 
+=======
+        
+        // Get cached full name for immediate display
+        final cachedFullName = await _auth.getStoredFullName();
+        
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
         final fullName = userData?['full_name'] ?? cachedFullName ?? '';
         final phoneNumber = userData?['phone_no'] ?? phoneNo;
 
         if (!mounted) return;
+<<<<<<< HEAD
 
         // Show welcome message translated!
         ScaffoldMessenger.of(context).showSnackBar(
@@ -92,6 +103,13 @@ class _LoginPageState extends State<LoginPage>
             content: Text(
               '${l10n.welcomeUser} ${fullName.isNotEmpty ? fullName : phoneNumber}',
             ),
+=======
+        
+        // Show welcome message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Welcome ${fullName.isNotEmpty ? fullName : phoneNumber}'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
             backgroundColor: Colors.green,
           ),
         );
@@ -100,10 +118,16 @@ class _LoginPageState extends State<LoginPage>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
+<<<<<<< HEAD
             builder:
                 (context) => HomePage(
                   userName: fullName.isNotEmpty ? fullName : phoneNumber,
                 ),
+=======
+            builder: (context) => HomePage(
+              userName: fullName.isNotEmpty ? fullName : phoneNumber,
+            ),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           ),
         );
       } else {
@@ -119,7 +143,11 @@ class _LoginPageState extends State<LoginPage>
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+<<<<<<< HEAD
             content: Text('${l10n.unexpectedError} $e'),
+=======
+            content: Text('An unexpected error occurred: $e'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
             backgroundColor: Colors.red,
           ),
         );
@@ -197,6 +225,7 @@ class _LoginPageState extends State<LoginPage>
                             children: [
                               // Title
                               ShaderMask(
+<<<<<<< HEAD
                                 shaderCallback:
                                     (bounds) => LinearGradient(
                                       colors: [
@@ -204,6 +233,14 @@ class _LoginPageState extends State<LoginPage>
                                         const Color(0xFF2D8F54),
                                       ],
                                     ).createShader(bounds),
+=======
+                                shaderCallback: (bounds) => LinearGradient(
+                                  colors: [
+                                    const Color(0xFF1C6B3C),
+                                    const Color(0xFF2D8F54),
+                                  ],
+                                ).createShader(bounds),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                 child: Text(
                                   l10n.welcomeBack,
                                   style: GoogleFonts.poppins(
@@ -243,8 +280,12 @@ class _LoginPageState extends State<LoginPage>
                                   keyboardType: TextInputType.phone,
                                   style: GoogleFonts.poppins(fontSize: 15),
                                   decoration: InputDecoration(
+<<<<<<< HEAD
                                     hintText:
                                         l10n.phoneHint, // Updated to l10n!
+=======
+                                    hintText: "Enter phone number",
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                     hintStyle: GoogleFonts.poppins(
                                       color: Colors.grey[400],
                                     ),
@@ -252,9 +293,13 @@ class _LoginPageState extends State<LoginPage>
                                       margin: const EdgeInsets.all(12),
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
+<<<<<<< HEAD
                                         color: const Color(
                                           0xFF1C6B3C,
                                         ).withOpacity(0.1),
+=======
+                                        color: const Color(0xFF1C6B3C).withOpacity(0.1),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: const Icon(
@@ -287,11 +332,15 @@ class _LoginPageState extends State<LoginPage>
                                       vertical: 18,
                                     ),
                                   ),
+<<<<<<< HEAD
                                   validator:
                                       (value) =>
                                           value!.isEmpty
                                               ? l10n.phoneError
                                               : null, // Updated to l10n!
+=======
+                                  validator: (value) => value!.isEmpty ? "Please enter phone number" : null,
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -321,9 +370,13 @@ class _LoginPageState extends State<LoginPage>
                                       margin: const EdgeInsets.all(12),
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
+<<<<<<< HEAD
                                         color: const Color(
                                           0xFF1C6B3C,
                                         ).withOpacity(0.1),
+=======
+                                        color: const Color(0xFF1C6B3C).withOpacity(0.1),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: const Icon(
@@ -370,11 +423,15 @@ class _LoginPageState extends State<LoginPage>
                                       vertical: 18,
                                     ),
                                   ),
+<<<<<<< HEAD
                                   validator:
                                       (value) =>
                                           value!.isEmpty
                                               ? l10n.passwordError
                                               : null,
+=======
+                                  validator: (value) => value!.isEmpty ? l10n.passwordError : null,
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -390,6 +447,7 @@ class _LoginPageState extends State<LoginPage>
                                           l10n.passwordResetSent,
                                           style: GoogleFonts.poppins(),
                                         ),
+<<<<<<< HEAD
                                         backgroundColor: const Color(
                                           0xFF1C6B3C,
                                         ),
@@ -398,6 +456,12 @@ class _LoginPageState extends State<LoginPage>
                                           borderRadius: BorderRadius.circular(
                                             10,
                                           ),
+=======
+                                        backgroundColor: const Color(0xFF1C6B3C),
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                         ),
                                       ),
                                     );
@@ -420,17 +484,25 @@ class _LoginPageState extends State<LoginPage>
                                 height: 56,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
+<<<<<<< HEAD
                                     colors: [
                                       Color(0xFF1C6B3C),
                                       Color(0xFF2D8F54),
                                     ],
+=======
+                                    colors: [Color(0xFF1C6B3C), Color(0xFF2D8F54)],
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
+<<<<<<< HEAD
                                       color: const Color(
                                         0xFF1C6B3C,
                                       ).withOpacity(0.3),
+=======
+                                      color: const Color(0xFF1C6B3C).withOpacity(0.3),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                       blurRadius: 15,
                                       offset: const Offset(0, 8),
                                     ),
@@ -462,6 +534,7 @@ class _LoginPageState extends State<LoginPage>
                               Row(
                                 children: [
                                   Expanded(
+<<<<<<< HEAD
                                     child: Divider(
                                       color: Colors.grey[300],
                                       thickness: 1,
@@ -471,6 +544,12 @@ class _LoginPageState extends State<LoginPage>
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
                                     ),
+=======
+                                    child: Divider(color: Colors.grey[300], thickness: 1),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                     child: Text(
                                       l10n.orDivider,
                                       style: GoogleFonts.poppins(
@@ -481,10 +560,14 @@ class _LoginPageState extends State<LoginPage>
                                     ),
                                   ),
                                   Expanded(
+<<<<<<< HEAD
                                     child: Divider(
                                       color: Colors.grey[300],
                                       thickness: 1,
                                     ),
+=======
+                                    child: Divider(color: Colors.grey[300], thickness: 1),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                                   ),
                                 ],
                               ),
@@ -536,4 +619,8 @@ class _LoginPageState extends State<LoginPage>
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09

@@ -32,6 +32,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
   final _sowingDateController = TextEditingController();
   final _customSoilTypeController = TextEditingController();
 
+<<<<<<< HEAD
   DateTime? _selectedSowingDate; // Safely stores exact backend date
 
   String? _selectedIrrigation; // Stores English key for backend
@@ -42,12 +43,25 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
   // The EXACT English values that get sent to your server
   final List<String> _irrigationKeys = ['Drip', 'Sprinkler', 'Flood', 'Canal'];
   final List<String> _farmingKeys = [
+=======
+  String? _selectedIrrigation;
+  String? _selectedFarmingType;
+  String? _selectedSoilType;
+  bool _isSoilTypeCustom = false;
+
+  final List<String> _irrigationTypes = ['Drip', 'Sprinkler', 'Flood', 'Canal'];
+  final List<String> _farmingTypes = [
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     'Organic',
     'Conventional',
     'Hydroponic',
     'No-Till',
   ];
+<<<<<<< HEAD
   final List<String> _soilKeys = [
+=======
+  final List<String> _soilTypes = [
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     'Alluvial Soil',
     'Black Soil (Regur Soil)',
     'Red Soil',
@@ -88,6 +102,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
     super.dispose();
   }
 
+<<<<<<< HEAD
   // Helpers to get localized display strings for dropdowns 🌟
   String _getLocalizedIrrigation(String key, AppLocalizations l10n) {
     switch (key) {
@@ -142,6 +157,8 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
     }
   }
 
+=======
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
   Future<void> _selectDate() async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -165,15 +182,21 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
 
     if (picked != null) {
       setState(() {
+<<<<<<< HEAD
         _selectedSowingDate = picked;
         // Uses standard numbers for the date format
         String standardDate =
             "${picked.day.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.year}";
         _sowingDateController.text = standardDate;
+=======
+        _sowingDateController.text =
+            "${picked.day}-${picked.month}-${picked.year}";
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
       });
     }
   }
 
+<<<<<<< HEAD
   Future<void> _savePlotDetails(AppLocalizations l10n) async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -188,12 +211,49 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
     final isoDate =
         "${_selectedSowingDate!.year}-${_selectedSowingDate!.month.toString().padLeft(2, '0')}-${_selectedSowingDate!.day.toString().padLeft(2, '0')}";
 
+=======
+  String? _convertToIsoDate(String input) {
+    input = input.trim();
+    if (input.isEmpty) return null;
+
+    final isoMatch = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+    if (isoMatch.hasMatch(input)) return input;
+
+    final parts = input.split('-');
+    if (parts.length == 3) {
+      if (parts[0].length == 4) return input;
+      final d = int.tryParse(parts[0]);
+      final m = int.tryParse(parts[1]);
+      final y = int.tryParse(parts[2]);
+      if (d != null && m != null && y != null) {
+        final dd = d.toString().padLeft(2, '0');
+        final mm = m.toString().padLeft(2, '0');
+        final yyyy = y.toString();
+        return '$yyyy-$mm-$dd';
+      }
+    }
+    return null;
+  }
+
+  Future<void> _savePlotDetails(AppLocalizations l10n) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final isoDate = _convertToIsoDate(_sowingDateController.text);
+    if (isoDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please pick a valid sowing date')),
+      );
+      return;
+    }
+
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     final plotName = _farmNameController.text.trim();
     final cropName = _cropNameController.text.trim();
     final cropVariety = _varietyController.text.trim();
     final latitude = widget.centerLatitude.toStringAsFixed(6);
     final longitude = widget.centerLongitude.toStringAsFixed(6);
     final totalAcres = widget.areaInAcres;
+<<<<<<< HEAD
 
     // We send the English Keys directly to the backend!
     final irrigation = _selectedIrrigation ?? '';
@@ -207,6 +267,18 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.selectIrrigationError),
+=======
+    final irrigation = _selectedIrrigation ?? '';
+    final farmingType = _selectedFarmingType ?? '';
+    final soilType = _isSoilTypeCustom
+        ? _customSoilTypeController.text.trim()
+        : (_selectedSoilType ?? '');
+
+    if (irrigation.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select irrigation type'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           backgroundColor: Colors.orange,
         ),
       );
@@ -215,8 +287,13 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
 
     if (farmingType.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
         SnackBar(
           content: Text(l10n.selectFarmingError),
+=======
+        const SnackBar(
+          content: Text('Please select farming type'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           backgroundColor: Colors.orange,
         ),
       );
@@ -225,8 +302,13 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
 
     if (soilType.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
         SnackBar(
           content: Text(l10n.selectSoilError),
+=======
+        const SnackBar(
+          content: Text('Please select or enter soil type'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           backgroundColor: Colors.orange,
         ),
       );
@@ -255,6 +337,11 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
 
       if (mounted) Navigator.of(context).pop();
 
+<<<<<<< HEAD
+=======
+      print('Plot creation result: $result');
+
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
       if (result is String) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result), backgroundColor: Colors.red),
@@ -267,7 +354,11 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
         if (message is Map && message['status'] == 'error') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+<<<<<<< HEAD
               content: Text(message['message'] ?? l10n.unexpectedServerError),
+=======
+              content: Text(message['message'] ?? 'Failed to create plot'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               backgroundColor: Colors.red,
             ),
           );
@@ -286,17 +377,30 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
         SnackBar(
           content: Text(l10n.unexpectedServerError),
+=======
+        const SnackBar(
+          content: Text('Unexpected server response'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           backgroundColor: Colors.orange,
         ),
       );
     } catch (e) {
+<<<<<<< HEAD
+=======
+      print('Error in _savePlotDetails: $e');
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+<<<<<<< HEAD
             content: Text('${l10n.errorSavingPlot}$e'),
+=======
+            content: Text('Error saving plot: $e'),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
             backgroundColor: Colors.red,
           ),
         );
@@ -345,6 +449,22 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+<<<<<<< HEAD
+=======
+    final List<String> irrigationTypes = [
+      l10n.drip,
+      l10n.sprinkler,
+      l10n.flood,
+      l10n.canal,
+    ];
+    final List<String> farmingTypes = [
+      l10n.organic,
+      l10n.conventional,
+      l10n.hydroponic,
+      l10n.noTill,
+    ];
+
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAF9),
       body: CustomScrollView(
@@ -356,7 +476,11 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               child: Column(
                 children: [
                   _buildPlotInfoSection(l10n),
+<<<<<<< HEAD
                   _buildFormSection(l10n),
+=======
+                  _buildFormSection(l10n, irrigationTypes, farmingTypes),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                   const SizedBox(height: 100),
                 ],
               ),
@@ -420,11 +544,15 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                 top: 20,
                 child: Opacity(
                   opacity: 0.1,
+<<<<<<< HEAD
                   child: const Icon(
                     Icons.agriculture,
                     size: 150,
                     color: Colors.white,
                   ),
+=======
+                  child: Icon(Icons.agriculture, size: 150, color: Colors.white),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                 ),
               ),
             ],
@@ -562,7 +690,15 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
     );
   }
 
+<<<<<<< HEAD
   Widget _buildFormSection(AppLocalizations l10n) {
+=======
+  Widget _buildFormSection(
+    AppLocalizations l10n,
+    List<String> irrigationTypes,
+    List<String> farmingTypes,
+  ) {
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(24),
@@ -588,11 +724,15 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                   color: const Color(0xFF0A6F3B).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
+<<<<<<< HEAD
                 child: const Icon(
                   Icons.edit_note,
                   color: Color(0xFF0A6F3B),
                   size: 24,
                 ),
+=======
+                child: const Icon(Icons.edit_note, color: Color(0xFF0A6F3B), size: 24),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               ),
               const SizedBox(width: 12),
               Text(
@@ -629,8 +769,27 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
             l10n: l10n,
           ),
           _buildDatePickerField(l10n),
+<<<<<<< HEAD
           _buildIrrigationDropdown(l10n),
           _buildFarmingDropdown(l10n),
+=======
+          _buildDropdownField(
+            label: l10n.irrigationTypeLabel,
+            value: _selectedIrrigation,
+            items: irrigationTypes,
+            icon: Icons.water_drop_outlined,
+            l10n: l10n,
+            onChanged: (value) => setState(() => _selectedIrrigation = value),
+          ),
+          _buildDropdownField(
+            label: l10n.farmingTypeLabel,
+            value: _selectedFarmingType,
+            items: farmingTypes,
+            icon: Icons.eco_outlined,
+            l10n: l10n,
+            onChanged: (value) => setState(() => _selectedFarmingType = value),
+          ),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           _buildSoilTypeField(l10n),
         ],
       ),
@@ -680,10 +839,14 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               filled: true,
               fillColor: const Color(0xFFF8FAF9),
+<<<<<<< HEAD
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
+=======
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(color: Colors.grey.shade300),
@@ -694,10 +857,14 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
+<<<<<<< HEAD
                 borderSide: const BorderSide(
                   color: Color(0xFF0A6F3B),
                   width: 2,
                 ),
+=======
+                borderSide: const BorderSide(color: Color(0xFF0A6F3B), width: 2),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
@@ -718,6 +885,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
     );
   }
 
+<<<<<<< HEAD
   Widget _buildIrrigationDropdown(AppLocalizations l10n) {
     return _buildDropdownBase(
       label: l10n.irrigationTypeLabel,
@@ -770,6 +938,12 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
     required String label,
     required String? value,
     required List<DropdownMenuItem<String>> items,
+=======
+  Widget _buildDropdownField({
+    required String label,
+    required String? value,
+    required List<String> items,
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
     required IconData icon,
     required ValueChanged<String?> onChanged,
     required AppLocalizations l10n,
@@ -797,7 +971,23 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
           const SizedBox(height: 10),
           DropdownButtonFormField<String>(
             value: value,
+<<<<<<< HEAD
             items: items,
+=======
+            items: items.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+              );
+            }).toList(),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
             onChanged: onChanged,
             style: GoogleFonts.inter(
               fontSize: 15,
@@ -812,10 +1002,14 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               filled: true,
               fillColor: const Color(0xFFF8FAF9),
+<<<<<<< HEAD
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
+=======
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(color: Colors.grey.shade300),
@@ -826,6 +1020,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
+<<<<<<< HEAD
                 borderSide: const BorderSide(
                   color: Color(0xFF0A6F3B),
                   width: 2,
@@ -836,6 +1031,12 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               Icons.keyboard_arrow_down,
               color: Color(0xFF0A6F3B),
             ),
+=======
+                borderSide: const BorderSide(color: Color(0xFF0A6F3B), width: 2),
+              ),
+            ),
+            icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF0A6F3B)),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
             validator: (value) => value == null ? l10n.selectOptionError : null,
           ),
         ],
@@ -851,6 +1052,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
         children: [
           Row(
             children: [
+<<<<<<< HEAD
               const Icon(
                 Icons.landscape_outlined,
                 size: 18,
@@ -859,6 +1061,12 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               const SizedBox(width: 8),
               Text(
                 l10n.soilType,
+=======
+              const Icon(Icons.landscape_outlined, size: 18, color: Color(0xFF0A6F3B)),
+              const SizedBox(width: 8),
+              Text(
+                'Soil Type',
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w600,
                   fontSize: 15,
@@ -871,6 +1079,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
           const SizedBox(height: 10),
           DropdownButtonFormField<String>(
             value: _selectedSoilType,
+<<<<<<< HEAD
             items:
                 _soilKeys.map((String key) {
                   return DropdownMenuItem<String>(
@@ -892,6 +1101,26 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                     ),
                   );
                 }).toList(),
+=======
+            items: _soilTypes.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: item == 'Other (type it)'
+                        ? const Color(0xFF0A6F3B)
+                        : Colors.black87,
+                    fontStyle: item == 'Other (type it)'
+                        ? FontStyle.italic
+                        : FontStyle.normal,
+                  ),
+                ),
+              );
+            }).toList(),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
             onChanged: (value) {
               setState(() {
                 _selectedSoilType = value;
@@ -900,17 +1129,25 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               });
             },
             decoration: InputDecoration(
+<<<<<<< HEAD
               hintText: l10n.selectSoilType,
+=======
+              hintText: 'Select soil type',
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               hintStyle: GoogleFonts.inter(
                 color: Colors.grey[400],
                 fontWeight: FontWeight.w500,
               ),
               filled: true,
               fillColor: const Color(0xFFF8FAF9),
+<<<<<<< HEAD
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
+=======
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(color: Colors.grey.shade300),
@@ -921,6 +1158,7 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
+<<<<<<< HEAD
                 borderSide: const BorderSide(
                   color: Color(0xFF0A6F3B),
                   width: 2,
@@ -934,6 +1172,17 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
             validator: (value) => value == null ? l10n.selectSoilError : null,
           ),
 
+=======
+                borderSide: const BorderSide(color: Color(0xFF0A6F3B), width: 2),
+              ),
+            ),
+            icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF0A6F3B)),
+            validator: (value) =>
+                value == null ? 'Please select a soil type' : null,
+          ),
+
+          // Custom text input shown when "Other (type it)" is selected
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           if (_isSoilTypeCustom) ...[
             const SizedBox(height: 12),
             TextFormField(
@@ -944,17 +1193,26 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                 color: Colors.black87,
               ),
               decoration: InputDecoration(
+<<<<<<< HEAD
                 hintText: l10n.describeSoilType,
+=======
+                hintText: 'Describe your soil type...',
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                 hintStyle: GoogleFonts.inter(
                   color: Colors.grey[400],
                   fontWeight: FontWeight.w500,
                 ),
                 filled: true,
                 fillColor: const Color(0xFFF8FAF9),
+<<<<<<< HEAD
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 16,
                 ),
+=======
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                 prefixIcon: const Icon(
                   Icons.edit_outlined,
                   color: Color(0xFF0A6F3B),
@@ -973,10 +1231,14 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
+<<<<<<< HEAD
                   borderSide: const BorderSide(
                     color: Color(0xFF0A6F3B),
                     width: 2,
                   ),
+=======
+                  borderSide: const BorderSide(color: Color(0xFF0A6F3B), width: 2),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -990,7 +1252,11 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               validator: (value) {
                 if (_isSoilTypeCustom &&
                     (value == null || value.trim().isEmpty)) {
+<<<<<<< HEAD
                   return l10n.pleaseDescribeSoil;
+=======
+                  return 'Please describe the soil type';
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                 }
                 return null;
               },
@@ -1044,10 +1310,15 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               filled: true,
               fillColor: const Color(0xFFF8FAF9),
+<<<<<<< HEAD
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
+=======
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               suffixIcon: Container(
                 margin: const EdgeInsets.all(8),
                 padding: const EdgeInsets.all(8),
@@ -1071,10 +1342,14 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
+<<<<<<< HEAD
                 borderSide: const BorderSide(
                   color: Color(0xFF0A6F3B),
                   width: 2,
                 ),
+=======
+                borderSide: const BorderSide(color: Color(0xFF0A6F3B), width: 2),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
@@ -1085,11 +1360,16 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                 borderSide: const BorderSide(color: Colors.red, width: 2),
               ),
             ),
+<<<<<<< HEAD
             validator:
                 (value) =>
                     value == null || value.isEmpty
                         ? l10n.selectDateError
                         : null,
+=======
+            validator: (value) =>
+                value == null || value.isEmpty ? l10n.selectDateError : null,
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
           ),
         ],
       ),
@@ -1136,11 +1416,15 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+<<<<<<< HEAD
                     const Icon(
                       Icons.check_circle_outline,
                       color: Colors.white,
                       size: 24,
                     ),
+=======
+                    const Icon(Icons.check_circle_outline, color: Colors.white, size: 24),
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
                     const SizedBox(width: 12),
                     Text(
                       l10n.savePlotDetails,
@@ -1160,4 +1444,8 @@ class _PlotDetailsFormPageState extends State<PlotDetailsFormPage>
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09

@@ -225,6 +225,7 @@
   "netProfit": "ನಿವ್ವಳ ಲಾಭ",
   "netLoss": "ನಿವ್ವಳ ನಷ್ಟ",
   "enterValidAmount": "ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ",
+<<<<<<< HEAD
   "enterSaleDetails": "ಮಾನ್ಯವಾದ ಮಾರಾಟ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ",
   "cropRice": "ಭತ್ತ",
   "cropWheat": "ಗೋಧಿ",
@@ -318,4 +319,7 @@
   "conventional": "ಸಾಂಪ್ರದಾಯಿಕ",
   "hydroponic": "ಹೈಡ್ರೋಪೋನಿಕ್",
   "noTill": "ಉಳುಮೆ ರಹಿತ (No-Till)"
+=======
+  "enterSaleDetails": "ಮಾನ್ಯವಾದ ಮಾರಾಟ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ"
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 }

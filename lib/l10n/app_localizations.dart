@@ -1597,6 +1597,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ton'**
   String get unitTon;
+<<<<<<< HEAD
 
   /// No description provided for @phoneHint.
   ///
@@ -1927,6 +1928,8 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error saving plot: '**
   String get errorSavingPlot;
+=======
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 }
 
 class _AppLocalizationsDelegate

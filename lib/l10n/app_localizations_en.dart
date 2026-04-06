@@ -762,6 +762,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitTon => 'Ton';
+<<<<<<< HEAD
 
   @override
   String get phoneHint => 'Enter phone number';
@@ -929,4 +930,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorSavingPlot => 'Error saving plot: ';
+=======
+>>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 }
