@@ -225,7 +225,6 @@
   "netProfit": "शुद्ध लाभ",
   "netLoss": "शुद्ध हानि",
   "enterValidAmount": "कृपया एक मान्य राशि दर्ज करें",
-<<<<<<< HEAD
   "enterSaleDetails": "मान्य बिक्री विवरण दर्ज करें",
   "cropRice": "चावल",
   "cropWheat": "गेहूं",
@@ -319,7 +318,4 @@
   "conventional": "पारंपरिक",
   "hydroponic": "हाइड्रोपोनिक (जलकृषि)",
   "noTill": "बिना जुताई (नो-टिल)"
-=======
-  "enterSaleDetails": "मान्य बिक्री विवरण दर्ज करें"
->>>>>>> 3ee9cc9039fcd5a2f59b6f5d225fb84b4aa2ce09
 }
